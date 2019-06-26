@@ -6,76 +6,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-
-
     <link rel="stylesheet" href="css/bootstrap.min.css">
-
 </head>
 
 <body>
     <div class="container">
-
         <br>
-        <select class="custom-select custom-select-lg mb-3" onchange="selectOnchang(this)">
+        <select class="custom-select custom-select-lg mb-3" id="citylist" onchange="selectOnchang(this.options[this.options.selectedIndex].value)">
             <option selected>select a city</option>
-            <option value="0">Da Lian</option>
+            <!-- <option value="0">Da Lian</option>
             <option value="1">Shang Hai</option>
-            <option value="2">Bei Jing</option>
+            <option value="2">Bei Jing</option> -->
         </select>
         <br>
-
         <div class="jumbotron">
-            <h1 class="display-4" id="tempAndWeather">9 &#8451; Most Cloudy</h1>
-            <p class="lead" id="wind">32 km/h</p>
+            <h1 class="display-4" id="tempAndWeather">unknown</h1>
+            <p class="lead" id="wind">unknown</p>
             <hr class="my-4">
-            <p class="lead" id="updatedTime">Thursday 11:00am</p>
+            <p class="lead" id="updatedTime">unknown</p>
         </div>
     </div>
-
-
-
-
-
-
 
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
     <script>
 
-        apiUrl = '';
-
+        var apiUrl = 'http://localhost:9999/interview/';
 
         function getCityList() {
-
-            var cityList
-
             $.ajax({
                 type: "GET",
-                url: apiUrl + "news/getIndex",
+                url: apiUrl + "tcity/getAll",
                 success: function (response) {
                     if (response.code === "SUCCESS") {
-                        console.log(response.object);
                         var cityList = response.object;
+                        cityList.forEach(element => {
+                            $('#citylist').append("<option value='" + element.name + "'>" + element.name + "</option>");
+                        });
                     } else {
                         alert("can not get city list");
                     }
                 }
             });
-            return cityList;
         }
-
 
         function getWeatherByCityName(name) {
             var weather
             $.ajax({
                 type: "GET",
-                url: apiUrl + "news/getIndex",
-
+                url: apiUrl + "tcity/getWeather",
+                data:{
+                    name:name
+                    
+                },
                 success: function (response) {
 
                     if (response.code === "SUCCESS") {
-                        console.log(response.object);
-                        var weather = response.object;
+
+                        $('#tempAndWeather').html(response.object.temperature + "&#8451; " + response.object.weather);
+                        $('#wind').html(response.object.wind + "km/h");
+                        $('#updatedTime').html(response.object.updateTime);
+
                     } else {
                         alert("can not get the city's weather");
                     }
@@ -86,52 +77,17 @@
 
 
         function selectOnchang(obj) {
-
-            alert(obj.selectedIndex);
-            // var city = '';
-
-            // var weather = getWeatherByCityName(city);
-            // $('#tempAndWeather').html("");
-            // $('#wind').html("");
-            // $('#updatedTime').html("");
-
-
-
+            console.log(obj);
+            var name=obj;
+            getWeatherByCityName(name);
+ 
         }
 
 
         $(document).ready(function () {
-
-            // var cityList = getCityList();
-
-            // for (var i = 0; i < cityList.length; i++) {
-            //     console.log(arr[i]);
-            //     var content = "<option value='"+i+"'>"+arr[i]+"</option>"
-            //     $('#dropdownItems').append(content);
-            // }
-
-
-
-
-
+            getCityList();
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </script>
-
 </body>
 
 </html>
