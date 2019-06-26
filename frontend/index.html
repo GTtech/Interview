@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+</head>
+
+<body>
+    <div class="container">
+
+        <br>
+        <select class="custom-select custom-select-lg mb-3" onchange="selectOnchang(this)">
+            <option selected>select a city</option>
+            <option value="0">Da Lian</option>
+            <option value="1">Shang Hai</option>
+            <option value="2">Bei Jing</option>
+        </select>
+        <br>
+
+        <div class="jumbotron">
+            <h1 class="display-4" id="tempAndWeather">9 &#8451; Most Cloudy</h1>
+            <p class="lead" id="wind">32 km/h</p>
+            <hr class="my-4">
+            <p class="lead" id="updatedTime">Thursday 11:00am</p>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script>
+
+        apiUrl = '';
+
+
+        function getCityList() {
+
+            var cityList
+
+            $.ajax({
+                type: "GET",
+                url: apiUrl + "news/getIndex",
+                success: function (response) {
+                    if (response.code === "SUCCESS") {
+                        console.log(response.object);
+                        var cityList = response.object;
+                    } else {
+                        alert("can not get city list");
+                    }
+                }
+            });
+            return cityList;
+        }
+
+
+        function getWeatherByCityName(name) {
+            var weather
+            $.ajax({
+                type: "GET",
+                url: apiUrl + "news/getIndex",
+
+                success: function (response) {
+
+                    if (response.code === "SUCCESS") {
+                        console.log(response.object);
+                        var weather = response.object;
+                    } else {
+                        alert("can not get the city's weather");
+                    }
+                }
+            });
+            return weather
+        }
+
+
+        function selectOnchang(obj) {
+
+            alert(obj.selectedIndex);
+            // var city = '';
+
+            // var weather = getWeatherByCityName(city);
+            // $('#tempAndWeather').html("");
+            // $('#wind').html("");
+            // $('#updatedTime').html("");
+
+
+
+        }
+
+
+        $(document).ready(function () {
+
+            // var cityList = getCityList();
+
+            // for (var i = 0; i < cityList.length; i++) {
+            //     console.log(arr[i]);
+            //     var content = "<option value='"+i+"'>"+arr[i]+"</option>"
+            //     $('#dropdownItems').append(content);
+            // }
+
+
+
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+</body>
+
+</html>
